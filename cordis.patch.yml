@@ -1,0 +1,7 @@
+# dsh-overflow-fallback 插件装载层。
+#
+# 一行 insert 就够：host 半区由本包入口注册，浏览器半区（后续版本）走 package.json
+# 的 dsh.client 清单。id 必须与包名一致；重复 insert 同一 id 会让加载器报错。
+- insert:
+    - id: dsh-overflow-fallback
+      name: 'dsh-overflow-fallback'

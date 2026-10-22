@@ -1,0 +1,26 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [20, 22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: No runtime dependencies
+        run: node -e "const p=require('./package.json');if(Object.keys(p.dependencies||{}).length)process.exit(1)"
+      - name: Unit tests
+        run: node test/decide.test.mjs && node test/plugin.test.mjs && node test/handoff.test.mjs && node test/service.test.mjs && node test/revive.test.mjs
+      - name: Install contract
+        run: node test/verify-install.mjs
+      - name: Publish payload
+        run: npm pack --dry-run

@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+.dev-deps/
+
+# Logs and OS noise
+*.log
+.DS_Store
+Thumbs.db
+
+# Local scratch
+.tmp/
+coverage/

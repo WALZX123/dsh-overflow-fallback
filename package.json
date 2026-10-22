@@ -1,0 +1,92 @@
+{
+  "name": "dsh-overflow-fallback",
+  "version": "0.3.0",
+  "description": "溢出兜底与续命：上下文超限、内置压缩放弃后自动再压一次并重试；仍失败时把原会话整理成交接包，在新会话接着聊。不换引擎、不加界面；续命默认显式触发，原会话只读。 · Overflow fallback and session revival for DeepSeek Harness: one last compaction retry, then continue the dead session in a fresh one with a handoff. No engine swap, no UI, original session read-only.",
+  "type": "module",
+  "main": "./lib/index.js",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "SECURITY.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "docs"
+  ],
+  "scripts": {
+    "test": "node test/decide.test.mjs && node test/plugin.test.mjs && node test/handoff.test.mjs && node test/service.test.mjs && node test/revive.test.mjs && node test/verify-install.mjs",
+    "verify": "node test/verify-install.mjs"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "context-window",
+    "compaction",
+    "session",
+    "revive",
+    "handoff",
+    "recovery"
+  ],
+  "license": "MIT",
+  "author": "WALZX123",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WALZX123/dsh-overflow-fallback.git"
+  },
+  "homepage": "https://github.com/WALZX123/dsh-overflow-fallback#readme",
+  "bugs": {
+    "url": "https://github.com/WALZX123/dsh-overflow-fallback/issues"
+  },
+  "engines": {
+    "node": ">=20",
+    "dsh": ">=0.2.1-rc.1 <0.3.0"
+  },
+  "dsh": {
+    "engines": {
+      "dsh": ">=0.2.1-rc.1 <0.3.0"
+    },
+    "compatibility": {
+      "dsh": ">=0.2.1-rc.1 <0.3.0",
+      "dshReleases": {
+        "0.2.0-rc.2": "untested",
+        "0.2.1-rc.2": "compatible"
+      },
+      "profiles": [
+        "web",
+        "desktop"
+      ]
+    },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "dshhub": {
+    "schemaVersion": 1,
+    "displayName": "dsh-overflow-fallback",
+    "summary": "溢出兜底与续命：内置压缩放弃后自动再试一次；仍失败时生成交接包并在新会话继续。提供 overflowFallback 服务，供其它插件生成交接包、判断溢出失败。",
+    "categories": [
+      "上下文",
+      "会话",
+      "稳定性"
+    ],
+    "surfaces": [
+      "host"
+    ],
+    "capabilities": {
+      "provides": [
+        "service:overflowFallback"
+      ]
+    },
+    "permissions": {
+      "network": []
+    }
+  }
+}

@@ -79,7 +79,7 @@ test('runner creates an agent and injects the handoff', async () => {
   assert.equal(calls.inject, 1)
   assert.equal(created.sessionId, 'new-session')
   assert.equal(created.meta.parentSession, 'old-session')
-  assert.match(created.injected.content, /会话续命/)
+  assert.match(created.injected.content[0].text, /会话续命/)
   assert.deepEqual(created.injected.source, { kind: 'overflow-fallback' })
 })
 
@@ -105,7 +105,6 @@ test('kickoff falls back to inject when followup is rejected', async () => {
       async create() {
         return { agent: { followup() { throw new Error('no turn') }, inject() { seen.inject += 1 } }, dispose: async () => {} } }
       },
-    },
     newId: () => 'k',
   })
   const result = await runner(session(), { kickoff: true })

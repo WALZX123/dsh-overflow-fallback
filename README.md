@@ -28,7 +28,7 @@ DeepSeek Harness 在请求超出上下文窗口时会触发压缩（compaction�
 | `billion-context` | 把上下文压到约 1/5，支持数月长会话 | **前置减少**；压不动时仍会溢出 |
 | `dsh-context` | 上下文构成与演变可视化 | **只读观察**；不改变溢出结果 |
 | `dsh-context-zip` / `dsh-context-guardian` / `dsh-compact-suite` | **替换或增强压缩引擎**（带收据的摘要、确定性区间、阈值控制） | 换引擎；本插件调用的是换了之后的那个引擎 |
-| `dsh-compact-saviour` | 用指定模型做压缩救援 + 原生弹窗里的手动压缩 | 手动触发 + 换模型；本插件是**自动**的，不调模型 |
+| `dsh-compact-saviour` | 用指定模型做压缩救援 + 原生弹窗里的手动压缩 | 手动触发 + 换模型；本插件的兜底重试不调模型，只有续命阶段会跑一轮 |
 | `dsh-context-guard`（`@2jumpsina/...`） | ctx 角标、45% 起写交接草稿、60% 提醒 | 预警与草稿；不含"失败后重试" |
 | `dsh-compact-button` / `dsh-context-actions` | 在输入框下加压缩/新会话按钮 | 手动入口；依赖 Web GUI |
 
@@ -80,8 +80,20 @@ dsh plugin --profile desktop add link:E:\path\to\dsh-overflow-fallback
 | `enabled` | boolean | `true` | 关掉后插件不注册任何监听 |
 | `maxAttempts` | 非负整数 | `2` | 每个 agent 最多尝试几次强制压缩；`0` 等于停用救援 |
 | `revive` | `off` / `manual` / `auto` | `manual` | 救不回来之后怎么办：`off` 不注册任何动作；`manual` 只提供 `revive_session` 工具/服务方法，由人或模型显式触发；`auto` 在重试用尽后自动开新会话并注入交接包 |
+| `kickoff` | boolean | `true` | 续命后是否立即跑第一轮：`true` 让交接包落盘、会话出现在列表（会消耗一次模型调用）；`false` 只排队上下文，会话是空的、列表里看不到 |
 
 **未知字段与类型错误会在装载期直接抛错**，不会静默忽略——profile 里写着 `maxAttempt: 3` 却按默认值跑，是最难排查的那类失效。
+
+## 工具与命令
+
+| 入口 | 类型 | 作用 |
+|---|---|---|
+| `revive_session` | 模型工具 | 把当前会话续到新会话（`revive` 不为 `off` 时注册） |
+| `recall_original` | 模型工具 | 按序号或锚点 `T3@seq42` 回读父会话日志，只读 |
+| `reload_plugins` | 模型工具 | 用官方 HMR 原地重载改动过的插件 |
+| `/reload` | 命令 | 同上，人从输入框 `/` 菜单触发 |
+
+限制：`recall_original` 只在父会话仍加载于当前进程时可用。DSH 重启后父会话变成冷会话，工具会明确报错；原会话日志仍在界面上可查。
 
 ## 安全边界
 

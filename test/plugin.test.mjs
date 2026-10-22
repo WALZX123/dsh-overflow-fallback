@@ -302,7 +302,7 @@ test('registers a /reload command that triggers HMR', async () => {
   toolHarness({ revive: 'manual' }, { hmr, commands })
   assert.equal(definitions.length, 1)
   assert.equal(definitions[0].name, 'reload')
-  assert.match(definitions[0].description, /重载/)
+  assert.match(definitions[0].description, /Reload/)
   const outcome = definitions[0].handler()
   assert.equal(outcome.kind, 'success')
   await new Promise(resolve => setTimeout(resolve, 150))

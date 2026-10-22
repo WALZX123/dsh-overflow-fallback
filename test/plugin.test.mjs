@@ -176,6 +176,10 @@ function toolHarness(config, options = {}) {
         if (ctx.commands === undefined) return
         scope.commands = ctx.commands
       }
+      if (services.includes('sessions')) {
+        if (ctx.sessions === undefined) return
+        scope.sessions = ctx.sessions
+      }
       callback(scope)
     },
     get(service) {
@@ -196,6 +200,7 @@ function toolHarness(config, options = {}) {
     },
     ...(options.hmr === undefined ? {} : { hmr: options.hmr }),
     ...(options.commands === undefined ? {} : { commands: options.commands }),
+    ...(options.sessions === undefined ? {} : { sessions: options.sessions }),
   }
   apply(ctx, config)
   return { ctx, registered }
@@ -302,4 +307,59 @@ test('registers a /reload command that triggers HMR', async () => {
   assert.equal(outcome.kind, 'success')
   await new Promise(resolve => setTimeout(resolve, 150))
   assert.deepEqual(calls.at(-1), [])
+})
+
+test('recall_original is registered when sessions are available', () => {
+  const { registered } = toolHarness({ revive: 'manual' }, { sessions: { get: () => undefined } })
+  assert.ok(registered.some(tool => tool.name === 'recall_original'))
+})
+
+test('recall_original reads the parent log slice', async () => {
+  const parent = {
+    snapshotEvents: () => [
+      { type: 'user/message', seq: 5, time: 0, data: { content: [{ type: 'text', text: '原始提问' }] } },
+      { type: 'assistant/message', seq: 9, time: 0, data: { message: { content: [{ type: 'text', text: '原始结论' }] } } },
+    ],
+  }
+  const sessions = { get: id => (id === 'parent-1' ? parent : undefined) }
+  const { registered } = toolHarness({ revive: 'manual' }, { sessions })
+  const tool = registered.find(item => item.name === 'recall_original')
+  const value = await tool.execute({ from: 1, to: 9 }, { agent: { session: { header: { parentSession: 'parent-1' } } } })
+  assert.equal(value.parentSessionId, 'parent-1')
+  assert.equal(value.events.length, 2)
+  assert.match(value.events[0].text, /原始提问/)
+  const rendered = tool.output.render({}, value)
+  assert.match(rendered[0].text, /seq 5/)
+  assert.match(rendered[0].text, /原始结论/)
+})
+
+test('recall_original resolves an anchor to one event', async () => {
+  const parent = {
+    snapshotEvents: () => [
+      { type: 'user/message', seq: 7, time: 0, data: { content: [{ type: 'text', text: 'a' }] } },
+      { type: 'user/message', seq: 8, time: 0, data: { content: [{ type: 'text', text: 'b' }] } },
+    ],
+  }
+  const { registered } = toolHarness({ revive: 'manual' }, { sessions: { get: () => parent } })
+  const tool = registered.find(item => item.name === 'recall_original')
+  const value = await tool.execute({ anchor: 'T2@seq8' }, { agent: { session: { header: { parentSession: 'p' } } } })
+  assert.deepEqual(value.events.map(event => event.seq), [8])
+})
+
+test('recall_original explains a session with no parent', async () => {
+  const { registered } = toolHarness({ revive: 'manual' }, { sessions: { get: () => undefined } })
+  const tool = registered.find(item => item.name === 'recall_original')
+  await assert.rejects(
+    () => tool.execute({}, { agent: { session: { header: {} } } }),
+    /not continued from another session/,
+  )
+})
+
+test('recall_original explains an unloaded parent', async () => {
+  const { registered } = toolHarness({ revive: 'manual' }, { sessions: { get: () => undefined } })
+  const tool = registered.find(item => item.name === 'recall_original')
+  await assert.rejects(
+    () => tool.execute({}, { agent: { session: { header: { parentSession: 'gone' } } } }),
+    /is not loaded/,
+  )
 })

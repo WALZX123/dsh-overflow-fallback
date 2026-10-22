@@ -2,14 +2,14 @@
 
 ## 版本路线
 
-首个对外发布是 **0.3.0**。0.1 / 0.2 是同一开发周期内的里程碑，不单独发布。
+首个对外发布是 **0.4.0**。0.1–0.3 是同一开发周期内的里程碑，不单独发布。
 
 | 版本 | 主题 | 范围 | 状态 |
 |---|---|---|---|
 | 0.1.0 | 溢出兜底 | `agent/request-error` 上强制再压一次并重试 | 开发期里程碑 |
 | 0.2.0 | 交接包 | 有损摘录 + 原会话锚点 + `overflowFallback` 服务 | 开发期里程碑 |
-| **0.3.0** | **续命** | `revive_session` / `reviveFor` / `recall` / `/reload` / `reload_plugins` | **首个发布** |
-| 0.4.0 | 可回查 | 把 `recall` 暴露成模型工具 `recall_original`；交接包锚点可直接被模型使用 | 计划 |
+| 0.3.0 | 续命 | `revive_session` / `reviveFor` / `/reload` / `reload_plugins` | 开发期里程碑 |
+| **0.4.0** | **可回查（首发）** | 模型工具 `recall_original`：按序号或锚点回读原会话 | **首个发布** |
 | 0.5.0 | 可见与可控 | 客户端半区：会话头部右侧的续命入口 + 预演模式（只返回计划不建会话） | 计划 |
 | 1.0.0 | 稳定 | 契约冻结；真实组合测试进 CI；类型检查 | 计划 |
 
@@ -43,8 +43,8 @@ npm pack --dry-run
 npm publish --access public
 
 # 4. 打 tag（与版本号一致）
-git tag v0.3.0
-git push origin v0.3.0
+git tag v0.4.0
+git push origin v0.4.0
 ```
 
 首个版本发布后，在 README 顶部换成真实安装命令：

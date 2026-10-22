@@ -1,6 +1,6 @@
 {
   "name": "dsh-overflow-fallback",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "溢出兜底与续命：上下文超限、内置压缩放弃后自动再压一次并重试；仍失败时把原会话整理成交接包，在新会话接着聊。不换引擎、不加界面；续命默认显式触发，原会话只读。 · Overflow fallback and session revival for DeepSeek Harness: one last compaction retry, then continue the dead session in a fresh one with a handoff. No engine swap, no UI, original session read-only.",
   "type": "module",
   "main": "./lib/index.js",

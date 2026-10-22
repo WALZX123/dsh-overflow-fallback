@@ -17,6 +17,8 @@ node test/handoff.test.mjs
 node test/service.test.mjs
 node test/revive.test.mjs
 node test/verify-install.mjs
+npm install          # 首次：安装类型检查用的开发依赖
+npm run typecheck    # strict 类型检查（jsconfig.json，检查 lib/）
 ```
 
 改完代码要它在本机生效，有两种方式：

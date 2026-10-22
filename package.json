@@ -23,7 +23,12 @@
   "scripts": {
     "test": "node test/decide.test.mjs && node test/plugin.test.mjs && node test/handoff.test.mjs && node test/service.test.mjs && node test/revive.test.mjs && node test/verify-install.mjs",
     "test:coverage": "node --test --experimental-test-coverage test/decide.test.mjs test/plugin.test.mjs test/handoff.test.mjs test/service.test.mjs test/revive.test.mjs",
+    "typecheck": "tsc -p jsconfig.json",
     "verify": "node test/verify-install.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2"
   },
   "keywords": [
     "deepseek-harness",

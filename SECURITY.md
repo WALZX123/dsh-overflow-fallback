@@ -23,7 +23,7 @@ DSH 插件以宿主进程的完整权限运行，没有独立沙箱。因此本�
 | **创建新会话** | `revive` 不为 `off` 且被显式触发 | 宿主会把新会话持久化到磁盘，并出现在会话列表 |
 | **发起一轮模型请求** | `kickoff: true`（默认） | 新会话会立即用交接包跑第一轮，**消耗 token** |
 | 注册 `/reload` 与 `reload_plugins` | 宿主提供 HMR | 重载 profile 中**所有**磁盘上发生变化且被引用的插件条目 |
-| 读取父会话日志 | 调用 `recall_original` / 服务 `recall` | 只读 `snapshotEvents()`，不修改任何会话 |
+| 读取父会话日志 | 调用 `recall_original` / 服务 `recall` | 只读内存中的会话，或经 `sessionQuery` 读磁盘日志；不修改任何会话 |
 | 注册 `overflowFallback` 服务 | 始终 | 其它插件可调用只读的交接包生成；`reviveFor` 会建会话 |
 
 ### 本插件不做、且代码里不应出现

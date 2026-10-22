@@ -94,7 +94,7 @@ dsh plugin --profile desktop add link:E:\path\to\dsh-overflow-fallback
 | `reload_plugins` | 模型工具 | 用官方 HMR 原地重载改动过的插件 |
 | `/reload` | 命令 | 同上，人从输入框 `/` 菜单触发 |
 
-限制：`recall_original` 只在父会话仍加载于当前进程时可用。DSH 重启后父会话变成冷会话，工具会明确报错；原会话日志仍在界面上可查。
+限制：`recall_original` 优先读内存中的父会话；DSH 重启后父会话变冷，会改用 `sessionQuery` 从磁盘读日志（需要日志文件仍在）。两者都不可用时才报错。
 
 ## 安全边界
 

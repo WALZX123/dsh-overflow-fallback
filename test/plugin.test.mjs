@@ -184,6 +184,7 @@ function toolHarness(config, options = {}) {
     },
     get(service) {
       if (service === 'workspaceRegistry') return options.workspaceRegistry
+      if (service === 'sessionQuery') return options.sessionQuery
       if (service !== 'agents') return undefined
       return {
         async create(options) {
@@ -362,4 +363,22 @@ test('recall_original explains an unloaded parent', async () => {
     () => tool.execute({}, { agent: { session: { header: { parentSession: 'gone' } } } }),
     /is not loaded/,
   )
+})
+
+test('recall_original reads a cold parent through the query service', async () => {
+  let disposed = 0
+  const sessionQuery = {
+    async observeSession() {
+      return {
+        events: [{ type: 'user/message', seq: 3, time: 0, data: { content: [{ type: 'text', text: '冷会话内容' }] } }],
+        dispose() { disposed += 1 },
+      }
+    },
+  }
+  const { registered } = toolHarness({ revive: 'manual' }, { sessions: { get: () => undefined }, sessionQuery })
+  const tool = registered.find(item => item.name === 'recall_original')
+  const value = await tool.execute({}, { agent: { session: { header: { parentSession: 'cold-1' } } } })
+  assert.equal(value.parentSessionId, 'cold-1')
+  assert.match(value.events[0].text, /冷会话内容/)
+  assert.equal(disposed, 1)
 })

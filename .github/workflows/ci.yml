@@ -25,5 +25,11 @@ jobs:
         run: node --test --experimental-test-coverage test/decide.test.mjs test/plugin.test.mjs test/handoff.test.mjs test/service.test.mjs test/revive.test.mjs
       - name: Install contract
         run: node test/verify-install.mjs
+      - name: Install dev dependencies
+        if: matrix.node == 24
+        run: npm ci --no-audit --no-fund
+      - name: Type check
+        if: matrix.node == 24
+        run: npm run typecheck
       - name: Publish payload
         run: npm pack --dry-run

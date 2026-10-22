@@ -81,6 +81,7 @@ dsh plugin --profile desktop add link:E:\path\to\dsh-overflow-fallback
 | `maxAttempts` | 非负整数 | `2` | 每个 agent 最多尝试几次强制压缩；`0` 等于停用救援 |
 | `revive` | `off` / `manual` / `auto` | `manual` | 救不回来之后怎么办：`off` 不注册任何动作；`manual` 只提供 `revive_session` 工具/服务方法，由人或模型显式触发；`auto` 在重试用尽后自动开新会话并注入交接包 |
 | `kickoff` | boolean | `true` | 续命后是否立即跑第一轮：`true` 让交接包落盘、会话出现在列表（会消耗一次模型调用）；`false` 只排队上下文，会话是空的、列表里看不到 |
+| `recallLimit` | 1–200 的整数 | `50` | `recall_original` 默认返回多少条事件；单次调用仍可临时指定 `limit`，上限 200 |
 
 **未知字段与类型错误会在装载期直接抛错**，不会静默忽略——profile 里写着 `maxAttempt: 3` 却按默认值跑，是最难排查的那类失效。
 

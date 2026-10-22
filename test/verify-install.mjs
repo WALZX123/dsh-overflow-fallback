@@ -47,6 +47,8 @@ assert.ok(lib.includes('index.js'), 'host entry exists')
 assert.ok(lib.includes('decide.js'), 'decision core exists')
 assert.ok(lib.includes('handoff.js'), 'handoff builder exists')
 assert.ok(lib.includes('service.js'), 'integration service exists')
+assert.ok(lib.includes('revive.js'), 'revival runner exists')
+assert.ok(lib.includes('tools.js'), 'tool definitions exist')
 
 const entry = await readFile(join(root, 'lib', 'index.js'), 'utf8')
 assert.match(entry, /export const name = 'dsh-overflow-fallback'/, 'exports a loader name')
@@ -70,7 +72,7 @@ const forbidden = [
   /\.spawn\s*\(/,
   /session\.append\s*\(/,
 ]
-for (const file of ['index.js', 'decide.js', 'handoff.js', 'service.js']) {
+for (const file of lib.filter(name => name.endsWith('.js'))) {
   const source = await readFile(join(root, 'lib', file), 'utf8')
   for (const pattern of forbidden) {
     assert.ok(!pattern.test(source), `lib/${file} must not match ${pattern}`)

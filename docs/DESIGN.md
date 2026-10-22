@@ -76,3 +76,16 @@ agent/request-error(payload, next)
 每个版本都必须保持：**默认无副作用、失败可见、可单独关闭**。
 
 自动续命失败后，同一会话不会被再次自动续命（`WeakSet` 只加不减），避免故障时反复建会话；手动工具失败则会释放标记，允许重试。
+
+## 7. 代码结构
+
+| 文件 | 职责 |
+|---|---|
+| `lib/index.js` | 装配：配置校验、错误监听、服务发布、把工具注册委派给 `tools.js` |
+| `lib/tools.js` | 模型工具 `revive_session` / `recall_original` / `reload_plugins` 与 `/reload` 命令 |
+| `lib/revive.js` | 续命执行器：建会话、投递交接包、挂接工作区 |
+| `lib/handoff.js` | 交接包生成（纯函数，无 I/O） |
+| `lib/service.js` | `overflowFallback` 服务契约与事件切片 |
+| `lib/decide.js` | 溢出判定与重试决策（纯函数，无 I/O） |
+
+依赖方向单向：`index → tools / revive / service`，`tools / revive → handoff / service`，`handoff / decide` 不依赖内部模块。工具抛出的错误带稳定 `code`，便于下游区分失败类型。

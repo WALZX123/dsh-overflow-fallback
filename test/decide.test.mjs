@@ -58,14 +58,19 @@ test('recoveryAction retries only after compaction made progress', () => {
 })
 
 test('narrowConfig defaults', () => {
-  assert.deepEqual(narrowConfig(undefined), { enabled: true, maxAttempts: 2, revive: 'manual', kickoff: true })
+  assert.deepEqual(narrowConfig(undefined), { enabled: true, maxAttempts: 2, revive: 'manual', kickoff: true, recallLimit: 50 })
 })
 
 test('narrowConfig accepts valid overrides', () => {
   assert.deepEqual(
-    narrowConfig({ enabled: false, maxAttempts: 0, revive: 'auto', kickoff: false }),
-    { enabled: false, maxAttempts: 0, revive: 'auto', kickoff: false },
+    narrowConfig({ enabled: false, maxAttempts: 0, revive: 'auto', kickoff: false, recallLimit: 120 }),
+    { enabled: false, maxAttempts: 0, revive: 'auto', kickoff: false, recallLimit: 120 },
   )
+})
+
+test('narrowConfig rejects an out-of-range recall limit', () => {
+  assert.throws(() => narrowConfig({ recallLimit: 0 }), /config\.recallLimit must be an integer between 1 and 200/)
+  assert.throws(() => narrowConfig({ recallLimit: 201 }), /config\.recallLimit must be an integer between 1 and 200/)
 })
 
 test('narrowConfig rejects a non-boolean kickoff', () => {

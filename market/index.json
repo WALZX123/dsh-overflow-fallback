@@ -1,0 +1,44 @@
+{
+  "format": 1,
+  "title": { "en": "WALZX123 plugins", "zh": "WALZX123 插件" },
+  "description": {
+    "en": "DeepSeek Harness plugins maintained by WALZX123.",
+    "zh": "WALZX123 维护的 DeepSeek Harness 插件。"
+  },
+  "metadata": {
+    "categories": {
+      "reliability": { "title": { "en": "Reliability", "zh": "可靠性" } }
+    },
+    "labels": {
+      "session": { "title": { "en": "Session", "zh": "会话" } },
+      "compaction": { "title": { "en": "Compaction", "zh": "压缩" } },
+      "no-ui": { "title": { "en": "No UI", "zh": "无界面" } }
+    }
+  },
+  "plugins": [
+    {
+      "name": "dsh-overflow-fallback",
+      "title": { "en": "Overflow Fallback", "zh": "溢出兜底" },
+      "description": {
+        "en": "When the context window is exceeded and built-in compaction gives up, retry compaction once, then continue the dead session in a fresh one with a lossy handoff. Original session stays read-only.",
+        "zh": "上下文超限、内置压缩放弃时，强制再压一次并重试；仍失败则把会话整理成交接包，在新会话继续，原会话只读保留。"
+      },
+      "icon": "icons/overflow-fallback.svg",
+      "author": "WALZX123",
+      "homepage": "https://www.npmjs.com/package/dsh-overflow-fallback",
+      "repository": { "url": "https://github.com/WALZX123/dsh-overflow-fallback" },
+      "metadata": {
+        "category": "reliability",
+        "labels": ["session", "compaction", "no-ui"]
+      },
+      "versions": [
+        {
+          "version": "0.4.0",
+          "publishTimestamp": 1792731337,
+          "source": { "type": "npm" },
+          "engines": { "dsh": ">=0.2.1-rc.1 <0.3.0" }
+        }
+      ]
+    }
+  ]
+}

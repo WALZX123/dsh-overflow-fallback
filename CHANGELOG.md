@@ -5,6 +5,7 @@
 
 ## [0.4.0] — 2026-10-22 · 首个公开发布
 
+- 已发布到 npm：`dsh-overflow-fallback@0.4.0`（2026-10-23），`dist-tags.latest` 指向该版本。
 - 新增模型工具 `recall_original`：按序号或交接包锚点（`T3@seq42`）回读原会话片段，只读，补齐"有损交接 + 可回查"的闭环。
 - 服务与工具共用同一套切片逻辑（`sliceEvents`），单次最多 200 条；默认条数由 `recallLimit` 配置（1–200，默认 50）。
 - 工程：工具与命令的注册拆到 `lib/tools.js`，`lib/index.js` 只做装配；工具抛出的错误带稳定 `code`（`no-parent`、`parent-not-loaded`、`no-session`、`already-revived`）。

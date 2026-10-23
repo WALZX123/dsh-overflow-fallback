@@ -1,5 +1,9 @@
 # dsh-overflow-fallback · 溢出兜底
 
+[![npm version](https://img.shields.io/npm/v/dsh-overflow-fallback)](https://www.npmjs.com/package/dsh-overflow-fallback)
+[![license](https://img.shields.io/npm/l/dsh-overflow-fallback)](LICENSE)
+[![dsh](https://img.shields.io/badge/DeepSeek%20Harness-dsh--plugin-4c8bf5)](https://github.com/deepseek-ai/deepseek-harness)
+
 > **一句话**：上下文爆了、内置压缩没救回来、之后每条消息都报 400 —— 这个插件做最后一道救援：强制再压一次并重试，不行就明确告诉你，而不是让会话悄悄死掉。
 
 [English](#english) · [设计说明](docs/DESIGN.md) · [安全模型](SECURITY.md)

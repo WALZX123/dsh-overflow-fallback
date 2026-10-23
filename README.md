@@ -47,8 +47,11 @@ DeepSeek Harness 在请求超出上下文窗口时会触发压缩（compaction�
 ## 安装
 
 ```powershell
-# 从 npm（发布后）
+# 从 npm（推荐）
 dsh plugin --profile desktop add dsh-overflow-fallback
+
+# 固定版本
+dsh plugin --profile desktop add dsh-overflow-fallback@0.4.0
 
 # 或直接从 GitHub
 dsh plugin --profile desktop add github:WALZX123/dsh-overflow-fallback

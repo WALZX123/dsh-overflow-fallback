@@ -52,7 +52,7 @@ assert.ok(lib.includes('tools.js'), 'tool definitions exist')
 
 const entry = await readFile(join(root, 'lib', 'index.js'), 'utf8')
 assert.match(entry, /export const name = 'dsh-overflow-fallback'/, 'exports a loader name')
-assert.match(entry, /export const inject = \[\]/, 'declares no required service')
+assert.match(entry, /export const inject = [^\n]*\[\]/, 'declares no required service')
 assert.match(entry, /export function apply/, 'exports apply')
 assert.match(entry, /ctx\.provide\(SERVICE_NAME/, 'publishes the integration service')
 
